@@ -11,7 +11,7 @@ import { MathsService } from './services/maths.service';
 				name: 'MATHS_QUEUE',
 				transport: Transport.RMQ,
 				options: {
-					urls: ['amqp://localhost:5672'],
+					urls: [enviroment.RABBITMQ_URL],
 					queue: 'maths_queue',
 				},
 			},
