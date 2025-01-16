@@ -1,0 +1,13 @@
+{
+  "name": "rabbitmq-project",
+  "version": "1.0.0",
+  "scripts": {
+    "start:services": "concurrently \"cd rabbitmq && npm run start:dev\" \"cd rabbitmq-producer && npm run start:dev\"",
+    "dev": "docker-compose up rabbitmq consumer-dev producer-dev",
+    "prod": "docker-compose up rabbitmq consumer producer -d",
+    "down": "docker-compose down"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

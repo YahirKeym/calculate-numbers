@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - '${RABBITMQ_PORT}:5672'
+      - '${RABBITMQ_MANAGEMENT_PORT}:15672'
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+
+  consumer:
+    build:
+      context: ./rabbitmq
+      dockerfile: Dockerfile
+    ports:
+      - '${CONSUMER_PORT}:3000'
+    environment:
+      - RABBITMQ_URL=${RABBITMQ_URL}
+    depends_on:
+      - rabbitmq
+
+  producer:
+    build:
+      context: ./rabbitmq-producer
+      dockerfile: Dockerfile
+    ports:
+      - '${PRODUCER_PORT}:3001'
+    environment:
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - PORT=${PRODUCER_PORT}
+    depends_on:
+      - rabbitmq
+
+  consumer-dev:
+    build:
+      context: ./rabbitmq
+      dockerfile: Dockerfile.dev
+    ports:
+      - '${CONSUMER_PORT}:3000'
+    environment:
+      - RABBITMQ_URL=${RABBITMQ_URL}
+    volumes:
+      - ./rabbitmq:/app
+      - /app/node_modules
+    command: npm run start:dev
+    depends_on:
+      - rabbitmq
+
+  producer-dev:
+    build:
+      context: ./rabbitmq-producer
+      dockerfile: Dockerfile.dev
+    ports:
+      - '${PRODUCER_PORT}:3001'
+    environment:
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - PORT=${PRODUCER_PORT}
+    volumes:
+      - ./rabbitmq-producer:/app
+      - /app/node_modules
+    command: npm run start:dev
+    depends_on:
+      - rabbitmq
+
+networks:
+  default:
+    driver: bridge
