@@ -5,7 +5,7 @@ import { ClientProxy } from '@nestjs/microservices';
 export class MathsService {
 	constructor(@Inject('MATHS_QUEUE') private readonly client: ClientProxy) {}
 
-	handleCalculate(body: { number: number }) {
+	public handleCalculate(body: { number: number }) {
 		const response = this.mapResponse(body.number);
 		return response;
 	}
@@ -21,7 +21,7 @@ export class MathsService {
 		return number > 1;
 	}
 
-	factorial(number: number) {
+	private factorial(number: number) {
 		let result = 1;
 		for (let i = 1; i <= number; i++) {
 			result *= i;
@@ -29,7 +29,7 @@ export class MathsService {
 		return result;
 	}
 
-	sumOfIntegers(number: number) {
+	private sumOfIntegers(number: number) {
 		let sum = 0;
 		for (let i = 1; i <= number; i++) {
 			sum += i;
@@ -37,7 +37,7 @@ export class MathsService {
 		return sum;
 	}
 
-	factors(number: number) {
+	private factors(number: number) {
 		const factors = [];
 		for (let i = 1; i <= number; i++) {
 			if (number % i === 0) factors.push(i);
@@ -45,7 +45,7 @@ export class MathsService {
 		return factors;
 	}
 
-	findFibonacci(number: number) {
+	private findFibonacci(number: number) {
 		const fibonacci = [0, 1];
 		for (let i = 2; i <= number; i++) {
 			fibonacci.push(fibonacci[i - 1] + fibonacci[i - 2]);
@@ -53,7 +53,7 @@ export class MathsService {
 		return fibonacci[number - 1];
 	}
 
-	mapResponse(number: number) {
+	private mapResponse(number: number) {
 		return {
 			isPair: this.isPair(number),
 			isPrime: this.isPrime(number),
